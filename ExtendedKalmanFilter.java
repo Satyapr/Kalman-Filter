@@ -1,3 +1,3 @@
-class ExtendedKalmanFilter {
+public abstract class ExtendedKalmanFilter {
 	
 }
