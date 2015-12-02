@@ -10,22 +10,30 @@ public class StandardKalmanFilter extends KalmanFilter {
     }
 
     public DoubleVector getStateEstimate() {
-        return stateEstimate;
+        return this.stateEstimate;
+    }
+
+    public ProcessModel getProcessModel() {
+        return this.processModel;
+    }
+
+    public ObservationModel getObservationModel() {
+        return this.observationModel;
     }
 
     public void predict(final DoubleVector u) {
         final DoubleMatrix stateTransitionMatrix = this.processModel.getStateTransitionMatrix();
         final DoubleMatrix controlMatrix = this.processModel.getControlMatrix();
 
-        stateEstimate = stateTransitionMatrix
+        this.stateEstimate = stateTransitionMatrix
                         .multiply(stateEstimate)
                         .add(controlMatrix.multiply(u));
 
-        errorCovarience = stateTransitionMatrix
-                        .multiply(errorCovarience)
-                        .multiply(stateTransitionMatrix
-                            .transpose())
-                        .add(processModel.getProcessNoise());
+        this.errorCovarience = stateTransitionMatrix
+                                .multiply(errorCovarience)
+                                .multiply(stateTransitionMatrix
+                                    .transpose())
+                                .add(processModel.getProcessNoise());
     }
 
     public void update(final DoubleVector z) {
@@ -33,7 +41,7 @@ public class StandardKalmanFilter extends KalmanFilter {
         final DoubleMatrix measurmentMatrixT = measurmentMatrix.transpose();
 
 
-        final DoubleVector innovation = z.subtract(measurmentMatrix.multiply(stateEstimate));
+        final DoubleVector innovation = z.subtract(measurmentMatrix.multiply(this.stateEstimate));
         
         final DoubleMatrix innovationCovarience = measurmentMatrix
                                                 .multiply(this.errorCovarience)
@@ -47,6 +55,7 @@ public class StandardKalmanFilter extends KalmanFilter {
         final DoubleMatrix identity = MatrixUtils.getDoubleIdentityMatrix(kalmanGain.getRowDimention());
 
         this.stateEstimate = this.stateEstimate.add(kalmanGain.multiply(innovation));
+
         this.errorCovarience = identity.subtract(kalmanGain.multiply(measurmentMatrix))
                                  .multiply(this.errorCovarience);
     }

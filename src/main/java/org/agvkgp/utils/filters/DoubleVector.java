@@ -1,3 +1,3 @@
-public class DoubleVector.java {
+public class DoubleVector {
 
 }

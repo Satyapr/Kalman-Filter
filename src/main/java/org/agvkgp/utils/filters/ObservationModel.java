@@ -1,4 +1,4 @@
-public class ObservationModel {
-	public RealMatrix getMeasurmentMatrix();
-	public RealMatrix getMeasurmentNoise();
+public interface ObservationModel {
+	public DoubleMatrix getMeasurmentMatrix();
+	public DoubleMatrix getMeasurmentNoise();
 }
